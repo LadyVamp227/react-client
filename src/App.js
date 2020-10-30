@@ -5,9 +5,10 @@ import ReactDOM from 'react-dom';
 class Articles extends React.Component {
     render() {
         return (
-            <table className="responsiveTable table table-striped bordered hover size='sm'" style={{wordBreak: 'break-all' }}>
+            <table className="responsiveTable table table-striped bordered">
                 <thead>
                 <tr>
+                    <th>Id</th>
                     <th>Article title</th>
                     <th>Article body</th>
                 </tr>
@@ -15,8 +16,9 @@ class Articles extends React.Component {
                 <tbody>
                 {this.props.articles && this.props.articles.map(article => {
                     return <tr>
-                        <td>{article.article_title}</td>
-                        <td>{article.article_body}</td>
+                        <td>{article.id}</td>
+                        <td style={{wordBreak: 'break-all' }}>{article.article_title}</td>
+                        <td style={{wordBreak: 'break-all' }}>{article.article_body}</td>
                     </tr>
                 })}
                 </tbody>
@@ -30,9 +32,12 @@ class App extends React.Component {
         super(props);
         this.state = {
             articles : [],
+            id: '',
             article_title: '',
             article_body: '',
+            checkbox : false
         };
+        this.handleCheckbox = this.handleCheckbox.bind(this);
         this.create = this.create.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
@@ -70,7 +75,8 @@ class App extends React.Component {
             },
             "body": JSON.stringify({
                 article_title: this.state.article_title,
-                article_body: this.state.article_body
+                article_body: this.state.article_body,
+                isActive : this.state.checkbox
             })
         })
             .then(response => response.json())
@@ -85,6 +91,14 @@ class App extends React.Component {
 
     handleChange(changeObject) {
         this.setState(changeObject)
+    }
+    handleCheckbox (checkbox){
+        if (this.state.checkbox === true){
+            this.setState({checkbox: false});
+        }
+        else {
+            this.setState({checkbox: true});
+        }
     }
 
     render() {
@@ -118,6 +132,18 @@ class App extends React.Component {
                                     required
                                 />
                             </label>
+                            <label htmlFor="isActive">
+                                Do you want set this article as active ?
+                                <input
+                                    name="isActive"
+                                    type="checkbox"
+                                    className="form-control"
+                                    style={{width:20 ,height:20}}
+                                    checked={this.state.checkbox}
+                                    onChange={this.handleCheckbox}
+                                />
+                            </label>
+
                             <button className="btn btn-success" type='button' onClick={(e) => this.create(e)}>
                                 Add
                             </button>
