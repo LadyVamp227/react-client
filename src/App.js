@@ -32,9 +32,9 @@ class App extends React.Component {
         super(props);
         this.state = {
             articles : [],
-            id: '',
-            article_title: '',
-            article_body: '',
+            id: null,
+            article_title: null,
+            article_body: null,
             checkbox : false
         };
         this.handleCheckbox = this.handleCheckbox.bind(this);
