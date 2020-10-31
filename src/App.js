@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
+
 
 
 class Articles extends React.Component {
@@ -38,28 +40,30 @@ class App extends React.Component {
             checkbox : false
         };
         this.handleCheckbox = this.handleCheckbox.bind(this);
+        this.getAllArticles = this.getAllArticles.bind(this);
         this.create = this.create.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
-        // get all data from api - GET
-        fetch("http://127.0.0.1:8000/api/articles", {
-            "method": "GET",
-            "headers": {
+        this.getAllArticles()
+    }
+    getAllArticles(){
+        axios.get('http://127.0.0.1:8000/api/articles', {
+            headers: {
                 "content-type": "application/json",
-                "accept": "application/json"
-            }
-        })
-            .then(response => response.json())
-            .then(response => {
-                // console.log(response)
-                this.setState({
-                    articles: response
-                })
+                "accept": "application/json",
+                'Access-Control-Allow-Origin' : '*',
+                'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+            },
+            responseType: 'json',
+        }).then(response => {
+            console.log(response)
+            this.setState({
+                articles: response.data
             })
-            .catch(err => { console.log(err);
-            });
+        }).catch(err => { console.log(err);
+        });
     }
 
     create(e) {
@@ -86,7 +90,8 @@ class App extends React.Component {
             .catch(err => {
                 console.log(err);
             });
-        window.location.reload()
+        this.getAllArticles();
+
     }
 
     handleChange(changeObject) {
